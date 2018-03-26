@@ -1,5 +1,6 @@
 import pandas as pd
 from xlsxwriter import *
+from datetime import date
 
 class Changedata:
     def __init__(self):
@@ -73,15 +74,23 @@ class Changedata:
         self.source.to_excel(writer, sheet_name=onglet)
         writer.save()
 
+    def convert_date(self,champs, nom_champ_cible):
+        "Methode convertissant le champ en date"
+        self.source[champs] = pd.to_datetime(self.source[nom_champ_cible])
 
+    def delta_time(self, date_deb, date_fin, champ_cible, nb_decimal = None):
+        self.source[champ_cible] = (date_fin - self.source[date_deb]) #/ 365.25
+        self.source[champ_cible] = round(self.source[champ_cible].dt.days / 365.25, nb_decimal)
 analyse = Changedata()
 
 analyse.chargement(r'D:\Users\sgasmi\Desktop\mydata2.xlsx','mydata')
-
+analyse.convert_date('Date de naissance','Date de naissance')
+analyse.delta_time('Date de naissance', date.today(), "Nv Age", 2)
 analyse.tranche("Age","LOL", ">30 ans", "inf",30)
 analyse.tranche("Age","LOL", "[30-40[", "sup ou égal", 30, "inf", 40)
 analyse.tranche("Age","LOL", "[40-50[", "sup ou égal", 40, "inf", 50)
 analyse.tranche("Age","LOL", "[50-99[", "sup ou égal",50)
+
 
 analyse.exportexcel(r'D:\Users\sgasmi\Desktop\monresultat.xlsx',"Data")
 
