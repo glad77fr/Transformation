@@ -2,6 +2,7 @@ import pandas as pd
 from xlsxwriter import *
 from datetime import date
 from datetime import datetime
+import numpy as np
 
 class Changedata:
 
@@ -105,7 +106,7 @@ class Changedata:
             date_fin = datetime.strptime(date_fin,'%d/%m/%Y')
         self.source[champ_cible] = (date_fin - self.source[date_deb])  # / 365.25
         self.source[champ_cible] = round(self.source[champ_cible].dt.days / 365.25, nb_decimal)
-
+        self.source[champ_cible] = self.source[champ_cible].values.astype(np.int64)
 
 analyse = Changedata()
 
@@ -113,21 +114,32 @@ analyse.chargement(r'D:\Users\sgasmi\Desktop\mydata2.xlsx', 'mydata')
 #analyse.convert_date('Date de naissance', 'Date de naissance')
 
 analyse.convert_date('Date de naissance')
+analyse.convert_date("Date d'entrée gr société mère")
 analyse.convert_date("Date d'entrée groupe")
 analyse.convert_date("Date d'entrée société")
 analyse.convert_date("Date d'entrée poste")
 
 #analyse.delta_time('Date de naissance', date.today(), "Nv Age", 2)
+
 analyse.delta_time('Date de naissance', '28/2/2018', "Age fin Février", 2)
-analyse.delta_time("Date d'entrée société", '28/2/2018', "Ancienneté soc fin Février", 2)
-analyse.delta_time("Date d'entrée groupe", '28/2/2018', "Ancienneté gr fin Février", 2)
+analyse.delta_time("Date d'entrée gr société mère", '28/2/2018', "Ancienneté Vinci fin Février", 2)
+analyse.delta_time("Date d'entrée groupe", '28/2/2018', "Ancienneté Eurovia fin Février", 2)
+analyse.delta_time("Date d'entrée société", '28/2/2018', "Ancienneté société fin Février", 2)
 analyse.delta_time("Date d'entrée poste", '28/2/2018', "Ancienneté poste fin Février", 2)
 
 #analyse.delta_time('AA', '28/2/2018', "Ancienneté Vinci fin Février", 2)
 
-analyse.tranche("Age", "LOL", ">30 ans", "inf", 30)
-analyse.tranche("Age", "LOL", "[30-40[", "sup ou égal", 30, "inf", 40)
-analyse.tranche("Age", "LOL", "[40-50[", "sup ou égal", 40, "inf", 50)
-analyse.tranche("Age", "LOL", "[50-99[", "sup ou égal", 50)
+analyse.tranche("Age", "Tranche d'âge", "<30ans", "inf", 30)
+analyse.tranche("Age", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
+analyse.tranche("Age", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
+analyse.tranche("Age", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
 
+analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "<2ans", "inf", 2)
+analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[2-5[", "sup ou égal", 2, "inf", 5)
+analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[5-10[", "sup ou égal", 5, "inf", 10)
+analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[10-15[", "sup ou égal", 10, "inf", 15)
+analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[15-20[", "sup ou égal", 15, "inf", 20)
+analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
+
+print(analyse.source.dtypes)
 analyse.exportexcel(r'D:\Users\sgasmi\Desktop\monresultat.xlsx', "Data")
