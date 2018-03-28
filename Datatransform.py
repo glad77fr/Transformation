@@ -30,66 +30,66 @@ class Changedata:
         if signe != "" and val1 != "" and signe2 is None:
             if signe == "inf":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x < val1 else x)
+                    lambda x: val_text if isinstance(x, float) and x < val1 else x)
             if signe == "inf ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x <= val1 else x)
+                    lambda x: val_text if isinstance(x, float) and x <= val1 else x)
             if signe == "sup":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x > val1 else x)
+                    lambda x: val_text if isinstance(x, float) and x > val1 else x)
             if signe == "sup ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x >= val1 else x)
+                    lambda x: val_text if isinstance(x, float) and x >= val1 else x)
 
         if signe != "" and signe2 is not None and val1 != "" and val2 is not None:
             if signe == "inf" and signe2 == "inf":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x < val1 and x < val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x < val1 and x < val2 else x)
             if signe == "inf" and signe2 == "inf ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x < val1 and x <= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x < val1 and x <= val2 else x)
             if signe == "inf" and signe2 == "sup":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x < val1 and x > val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x < val1 and x > val2 else x)
             if signe == "inf" and signe2 == "sup ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x < val1 and x >= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x < val1 and x >= val2 else x)
             if signe == "inf ou égal" and signe2 == "inf":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x <= val1 and x < val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x <= val1 and x < val2 else x)
             if signe == "inf ou égal" and signe2 == "inf ou égal":
                 self.source[champ_cible] = self.source[champ_cible][champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x <= val1 and x <= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x <= val1 and x <= val2 else x)
             if signe == "inf ou égal" and signe2 == "sup":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x <= val1 and x > val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x <= val1 and x > val2 else x)
             if signe == "inf ou égal" and signe2 == "sup ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x <= val1 and x >= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x <= val1 and x >= val2 else x)
             if signe == "sup" and signe2 == "inf":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x > val1 and x < val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x > val1 and x < val2 else x)
             if signe == "sup" and signe2 == "inf ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x > val1 and x <= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x > val1 and x <= val2 else x)
             if signe == "sup" and signe2 == "sup":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x > val1 and x > val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x > val1 and x > val2 else x)
             if signe == "sup" and signe2 == "sup ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x > val1 and x >= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x > val1 and x >= val2 else x)
             if signe == "sup ou égal" and signe2 == "inf":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x >= val1 and x < val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x >= val1 and x < val2 else x)
             if signe == "sup ou égal" and signe2 == "inf ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x >= val1 and x <= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x >= val1 and x <= val2 else x)
             if signe == "sup ou égal" and signe2 == "sup":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x >= val1 and x > val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x >= val1 and x > val2 else x)
             if signe == "sup ou égal" and signe2 == "sup ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, int) and x >= val1 and x >= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x >= val1 and x >= val2 else x)
 
     def exportexcel(self, repertoire, onglet):
         """Méthode permettant d'extraire le résultat sous forme d'un fichier excel"""
@@ -97,20 +97,24 @@ class Changedata:
         self.source.to_excel(writer, sheet_name=onglet)
         writer.save()
 
-    def convert_date(self, champ):
+    def convert_date(self, champ, nv_champ= None):
         "Methode convertissant le champ en date"
-        self.source[champ] = pd.to_datetime(self.source[champ], errors='coerce')
+        if nv_champ is None:
+            self.source[champ] = pd.to_datetime(self.source[champ], errors='coerce')
+        else:
+            self.source[nv_champ] = pd.to_datetime(self.source[champ], errors='coerce')
 
     def delta_time(self, date_deb, date_fin, champ_cible, nb_decimal=None):
         if isinstance(date_fin,str):
             date_fin = datetime.strptime(date_fin,'%d/%m/%Y')
-        self.source[champ_cible] = (date_fin - self.source[date_deb])  # / 365.25
+
+        #self.source[champ_cible] = self.source[champ_cible].values.astype(np.int64)
+        self.source[champ_cible] = (date_fin - self.source[date_deb])
         self.source[champ_cible] = round(self.source[champ_cible].dt.days / 365.25, nb_decimal)
-        self.source[champ_cible] = self.source[champ_cible].values.astype(np.int64)
 
 analyse = Changedata()
 
-analyse.chargement(r'D:\Users\sgasmi\Desktop\mydata2.xlsx', 'mydata')
+analyse.chargement(r'D:\Users\sgasmi\Desktop\Données maquette\Effectif fin février.xlsx', 'Base')
 #analyse.convert_date('Date de naissance', 'Date de naissance')
 
 analyse.convert_date('Date de naissance')
@@ -129,10 +133,10 @@ analyse.delta_time("Date d'entrée poste", '28/2/2018', "Ancienneté poste fin F
 
 #analyse.delta_time('AA', '28/2/2018', "Ancienneté Vinci fin Février", 2)
 
-analyse.tranche("Age", "Tranche d'âge", "<30ans", "inf", 30)
-analyse.tranche("Age", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
-analyse.tranche("Age", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
-analyse.tranche("Age", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
+analyse.tranche("Age fin Février", "Tranche d'âge", "<30ans", "inf", 30)
+analyse.tranche("Age fin Février", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
+analyse.tranche("Age fin Février", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
+analyse.tranche("Age fin Février", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
 
 analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "<2ans", "inf", 2)
 analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[2-5[", "sup ou égal", 2, "inf", 5)
@@ -142,4 +146,4 @@ analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia
 analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
 
 print(analyse.source.dtypes)
-analyse.exportexcel(r'D:\Users\sgasmi\Desktop\monresultat.xlsx', "Data")
+analyse.exportexcel(r'D:\Users\sgasmi\Desktop\monresultat.xlsx', "Base")
