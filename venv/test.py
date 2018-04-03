@@ -1,5 +1,5 @@
-a = "fsdfsm"
-b= 10
-f = lambda x: "toto" if isinstance(x, int) and x > 3 else x
 
-print(f(a))
+a= 2
+
+if a not in [1,2]:
+    print("ok")

@@ -112,6 +112,44 @@ class Changedata:
         self.source[champ_cible] = (date_fin - self.source[date_deb])
         self.source[champ_cible] = round(self.source[champ_cible].dt.days / 365.25, nb_decimal)
 
+    def effectif_inscrit(self,champ_cible):
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and (self.source.at[i, "CtSAL"] in [1, 8])\
+                    and (self.source.at[i, "Sté LC"] not in [9108, 2429]):
+                self.source.at[i, champ_cible] = 1
+
+    def effectif_physique_actif(self,champ_cible):
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] == 3) and (self.source.at[i, "CtSAL"] in [1, 8]) \
+                    and (self.source.at[i, "Sté LC"] not in [9108, 2429]):
+                self.source.at[i, champ_cible] = 1
+
+    def effectif_ETP_theorique(self,champ_cible):
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and (self.source.at[i, "CtSAL"] in [1, 8]) \
+                    and (self.source.at[i, "Sté LC"] not in [9108, 2429]):
+                self.source.at[i, champ_cible] = self.source.at[i, "Equivalent temps plein"]
+
+    def effectif_retraite(self, champ_cible, date_cible, champ_age):
+        if isinstance(date_cible,str):
+            date_cible = datetime.strptime(date_cible,'%d/%m/%Y')
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and (self.source.at[i, "CtSAL"] in [1, 8]) \
+                    and (self.source.at[i, "Sté LC"] not in [9108, 2429]) and pd.isnull(self.source.at[i,"Date de naissance"]) is False:
+
+                        if int(self.source.at[i, "Date de naissance"].year) < 1956 and self.source.at[i, champ_age] >= 60:
+                            self.source.at[i, champ_cible] = "Oui"
+
+                        if int(self.source.at[i, "Date de naissance"].year) >= 1956 and self.source.at[i, champ_age] >= 62:
+                            self.source.at[i,champ_cible] = "Oui"
+
+    def effectif_interim(self, champ_cible):
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and self.source.at[i, "CtSAL"] == 7 \
+                    and (self.source.at[i, "Sté LC"] not in [9108, 2429]):
+                self.source.at[i, champ_cible] = "Oui"
+
+
 analyse = Changedata()
 
 analyse.chargement(r'D:\Users\sgasmi\Desktop\Données maquette\Effectif fin février.xlsx', 'Base')
@@ -145,5 +183,10 @@ analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia
 analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[15-20[", "sup ou égal", 15, "inf", 20)
 analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
 
-print(analyse.source.dtypes)
+analyse.effectif_inscrit("Effectif inscrit")
+analyse.effectif_physique_actif("Effectif inscrit actif")
+analyse.effectif_ETP_theorique("Effectif ETP")
+analyse.effectif_retraite("retraite", '28/02/2018', "Age fin Février")
+analyse.effectif_interim("Interimaire")
+#print(analyse.source.dtypes)
 analyse.exportexcel(r'D:\Users\sgasmi\Desktop\monresultat.xlsx', "Base")
