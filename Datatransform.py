@@ -138,17 +138,28 @@ class Changedata:
                     and (self.source.at[i, "Sté LC"] not in [9108, 2429]) and pd.isnull(self.source.at[i,"Date de naissance"]) is False:
 
                         if int(self.source.at[i, "Date de naissance"].year) < 1956 and self.source.at[i, champ_age] >= 60:
-                            self.source.at[i, champ_cible] = "Oui"
+                            self.source.at[i, champ_cible] = 1
 
                         if int(self.source.at[i, "Date de naissance"].year) >= 1956 and self.source.at[i, champ_age] >= 62:
-                            self.source.at[i,champ_cible] = "Oui"
+                            self.source.at[i,champ_cible] = 1
 
     def effectif_interim(self, champ_cible):
         for i, cel in enumerate(self.source.itertuples()):
             if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and self.source.at[i, "CtSAL"] == 7 \
                     and (self.source.at[i, "Sté LC"] not in [9108, 2429]):
-                self.source.at[i, champ_cible] = "Oui"
+                self.source.at[i, champ_cible] = 1
 
+    def headcount(self, champ_cible):
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and str(self.source.at[i, "DPer"])[0] == "G" and \
+                    self.source.at[i, "Tranche de décompte"] not in [99]:
+                self.source.at[i, champ_cible] = 1
+
+    def FTE(self,champ_cible):
+        for i, cel in enumerate(self.source.itertuples()):
+            if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and str(self.source.at[i, "DPer"])[0] == "G" and \
+                    self.source.at[i, "Tranche de décompte"] not in [99]:
+                self.source.at[i, champ_cible] = self.source.at[i, "Equivalent temps plein"]
 
 analyse = Changedata()
 
@@ -162,31 +173,62 @@ analyse.convert_date("Date d'entrée société")
 analyse.convert_date("Date d'entrée poste")
 
 #analyse.delta_time('Date de naissance', date.today(), "Nv Age", 2)
-
-analyse.delta_time('Date de naissance', '28/2/2018', "Age fin Février", 2)
-analyse.delta_time("Date d'entrée gr société mère", '28/2/2018', "Ancienneté Vinci fin Février", 2)
-analyse.delta_time("Date d'entrée groupe", '28/2/2018', "Ancienneté Eurovia fin Février", 2)
-analyse.delta_time("Date d'entrée société", '28/2/2018', "Ancienneté société fin Février", 2)
-analyse.delta_time("Date d'entrée poste", '28/2/2018', "Ancienneté poste fin Février", 2)
+""""
+analyse.delta_time('Date de naissance', '28/2/2018', "Age salarié", 2)
+analyse.delta_time("Date d'entrée gr société mère", '28/2/2018', "Ancienneté Vinci", 2)
+analyse.delta_time("Date d'entrée groupe", '28/2/2018', "Ancienneté Eurovia", 2)
+analyse.delta_time("Date d'entrée société", '28/2/2018', "Ancienneté société", 2)
+analyse.delta_time("Date d'entrée poste", '28/2/2018', "Ancienneté poste", 2)
 
 #analyse.delta_time('AA', '28/2/2018', "Ancienneté Vinci fin Février", 2)
 
-analyse.tranche("Age fin Février", "Tranche d'âge", "<30ans", "inf", 30)
-analyse.tranche("Age fin Février", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
-analyse.tranche("Age fin Février", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
-analyse.tranche("Age fin Février", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
+analyse.tranche("Age salarié", "Tranche d'âge", "<30ans", "inf", 30)
+analyse.tranche("Age salarié", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
+analyse.tranche("Age salarié", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
+analyse.tranche("Age salarié", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
 
-analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "<2ans", "inf", 2)
-analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[2-5[", "sup ou égal", 2, "inf", 5)
-analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[5-10[", "sup ou égal", 5, "inf", 10)
-analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[10-15[", "sup ou égal", 10, "inf", 15)
-analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[15-20[", "sup ou égal", 15, "inf", 20)
-analyse.tranche("Ancienneté Eurovia fin Février", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "<2ans", "inf", 2)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[2-5[", "sup ou égal", 2, "inf", 5)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[5-10[", "sup ou égal", 5, "inf", 10)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[10-15[", "sup ou égal", 10, "inf", 15)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[15-20[", "sup ou égal", 15, "inf", 20)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
 
 analyse.effectif_inscrit("Effectif inscrit")
 analyse.effectif_physique_actif("Effectif inscrit actif")
 analyse.effectif_ETP_theorique("Effectif ETP")
-analyse.effectif_retraite("retraite", '28/02/2018', "Age fin Février")
+analyse.effectif_retraite("Prediction retraite", '28/02/2018', "Age salarié")
 analyse.effectif_interim("Interimaire")
 #print(analyse.source.dtypes)
+"""
+
+analyse.source["Sexe"].value_counts().head(10).plot.bar()
+analyse.delta_time('Date de naissance', '31/3/2018', "Age salarié", 2)
+analyse.delta_time("Date d'entrée gr société mère", '31/3/2018', "Ancienneté Vinci", 2)
+analyse.delta_time("Date d'entrée groupe", '31/3/2018', "Ancienneté Eurovia", 2)
+analyse.delta_time("Date d'entrée société", '31/3/2018', "Ancienneté société", 2)
+analyse.delta_time("Date d'entrée poste", '31/3/2018', "Ancienneté poste", 2)
+
+#analyse.delta_time('AA', '28/2/2018', "Ancienneté Vinci fin Février", 2)
+
+analyse.tranche("Age salarié", "Tranche d'âge", "<30ans", "inf", 30)
+analyse.tranche("Age salarié", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
+analyse.tranche("Age salarié", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
+analyse.tranche("Age salarié", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
+
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "<2ans", "inf", 2)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[2-5[", "sup ou égal", 2, "inf", 5)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[5-10[", "sup ou égal", 5, "inf", 10)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[10-15[", "sup ou égal", 10, "inf", 15)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[15-20[", "sup ou égal", 15, "inf", 20)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
+
+analyse.effectif_inscrit("Effectif inscrit")
+analyse.effectif_physique_actif("Effectif inscrit actif")
+analyse.effectif_ETP_theorique("Effectif ETP")
+analyse.effectif_retraite("Prediction retraite", '31/3/2018', "Age salarié")
+analyse.effectif_interim("Interimaire")
+analyse.headcount("Headcount")
+analyse.FTE("FTE")
+
 analyse.exportexcel(r'D:\Users\sgasmi\Desktop\monresultat.xlsx', "Base")
