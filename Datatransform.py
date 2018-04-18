@@ -159,7 +159,7 @@ class Changedata:
         for i, cel in enumerate(self.source.itertuples()):
             if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and str(self.source.at[i, "DPer"])[0] == "G" and \
                     self.source.at[i, "Tranche de décompte"] not in [99]:
-                self.source.at[i, champ_cible] = self.source.at[i, "Equivalent temps plein"]
+                self.source.at[i, champ_cible] = self.source.at[i, "Hres ouvrées/semaine"]/self.source.at[i, "Full Time Equivalent"]
 
 analyse = Changedata()
 
