@@ -26,7 +26,6 @@ class Changedata:
             if test is False:
                 self.source[champ_cible] = self.source[champ_source]
 
-
         if signe != "" and val1 != "" and signe2 is None:
             if signe == "inf":
                 self.source[champ_cible] = self.source[champ_cible].apply(
