@@ -70,7 +70,7 @@ class Changedata:
                     lambda x: val_text if isinstance(x, float) and x > val1 and x < val2 else x)
             if signe == "sup" and signe2 == "inf ou égal":
                 self.source[champ_cible] = self.source[champ_cible].apply(
-                    lambda x: val_text if isinstance(x, float) and x > val1 and x <= val2 else x)
+                    lambda x: val_text if isinstance(x, float) and x > val1 and x <= val2 else "toto")
             if signe == "sup" and signe2 == "sup":
                 self.source[champ_cible] = self.source[champ_cible].apply(
                     lambda x: val_text if isinstance(x, float) and x > val1 and x > val2 else x)
@@ -136,10 +136,10 @@ class Changedata:
             if (self.source.at[i, "Clé statut d'activité"] in [1, 3]) and (self.source.at[i, "CtSAL"] in [1, 8]) \
                     and (self.source.at[i, "Sté LC"] not in [9108, 2429]) and pd.isnull(self.source.at[i,"Date de naissance"]) is False:
 
-                        if int(self.source.at[i, "Date de naissance"].year) < 1956 and self.source.at[i, champ_age] >= 60:
+                        if int(self.source.at[i, "Date de naissance"].year) < 1956 and self.source.at[i, champ_age] >= 65: #60 pour la france
                             self.source.at[i, champ_cible] = 1
 
-                        if int(self.source.at[i, "Date de naissance"].year) >= 1956 and self.source.at[i, champ_age] >= 62:
+                        if int(self.source.at[i, "Date de naissance"].year) >= 1956 and self.source.at[i, champ_age] >= 65: #62 pour la france
                             self.source.at[i,champ_cible] = 1
 
     def effectif_interim(self, champ_cible):
@@ -210,17 +210,28 @@ analyse.delta_time("Date d'entrée poste", '31/3/2018', "Ancienneté poste", 2)
 
 #analyse.delta_time('AA', '28/2/2018', "Ancienneté Vinci fin Février", 2)
 
-analyse.tranche("Age salarié", "Tranche d'âge", "<30ans", "inf", 30)
-analyse.tranche("Age salarié", "Tranche d'âge", "[30-40[", "sup ou égal", 30, "inf", 40)
-analyse.tranche("Age salarié", "Tranche d'âge", "[40-50[", "sup ou égal", 40, "inf", 50)
-analyse.tranche("Age salarié", "Tranche d'âge", "[50-99[", "sup ou égal", 50)
+analyse.tranche("Age salarié", "Tranche d'âge", "< or = 25 years", "inf", 26)
+analyse.tranche("Age salarié", "Tranche d'âge", "26 to 30 years", "sup ou égal", 26, "inf", 31)
+analyse.tranche("Age salarié", "Tranche d'âge", "31 to 35 years", "sup ou égal", 31, "inf", 36)
+analyse.tranche("Age salarié", "Tranche d'âge", "36 to 40 years", "sup ou égal", 36, "inf", 41)
+analyse.tranche("Age salarié", "Tranche d'âge", "41 to 45 years", "sup ou égal", 41, "inf", 46)
+analyse.tranche("Age salarié", "Tranche d'âge", "46 to 50 years", "sup ou égal", 46, "inf", 51)
+analyse.tranche("Age salarié", "Tranche d'âge", "51 to 55 years", "sup ou égal", 51, "inf", 56)
+analyse.tranche("Age salarié", "Tranche d'âge", "56 to 60 years", "sup ou égal", 56, "inf", 61)
+analyse.tranche("Age salarié", "Tranche d'âge", " + or = 61 years", "sup ou égal", 61)
 
-analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "<2ans", "inf", 2)
-analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[2-5[", "sup ou égal", 2, "inf", 5)
-analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[5-10[", "sup ou égal", 5, "inf", 10)
-analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[10-15[", "sup ou égal", 10, "inf", 15)
-analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[15-20[", "sup ou égal", 15, "inf", 20)
-analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "[20-99[", "sup ou égal", 20)
+
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "<1", "inf", 1)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "1 to 5 years", "sup ou égal", 1, "inf", 6)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "6 to 10 years", "sup ou égal", 6, "inf", 11)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "11 to 15 years", "sup ou égal", 11, "inf", 16)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "16 to 20 years", "sup ou égal", 16, "inf", 21)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "21 to 25 years", "sup ou égal", 21, "inf", 26)
+analyse.tranche("Ancienneté Eurovia", "Tranche ancienneté Eurovia", "+ or = 26 years", "sup ou égal", 26)
+
+analyse.remplacement_valeurs("Type de contrat.1",{"Perm full time" : "Headcount with open-ended contract","Perm part time" : "Headcount with open-ended contract",\
+"Fix term full T" :"Headcount with term contract", "Fix term part T" : "Headcount with term contract", "Casual" : "Headcount with term contract",\
+"Seasonal" : "Headcount with term contract","Apprentice Full" : "Headcount with open-ended contract"})
 
 analyse.effectif_inscrit("Effectif inscrit")
 analyse.effectif_physique_actif("Effectif inscrit actif")
