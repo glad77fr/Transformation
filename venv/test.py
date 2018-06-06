@@ -1,16 +1,9 @@
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-import itertools
+import pandas as pd
 
-# Fixing random state for reproducibility
-np.random.seed(19680801)
+a = pd.DataFrame({"Mat": [1,4,6,7,3], 2: [1,4,5,5,5], 6: [2,4,5,5,0]})
+b = pd.DataFrame({"Mat": [1,4,4,5,5], 2: [11,144,5,5,65], 4: [12,41,51,51,11]})
 
-
-matplotlib.rcParams['axes.unicode_minus'] = False
-fig, ax = plt.subplots()
-ax.plot(10*np.random.randn(100), 10*np.random.randn(100), 'o')
-ax.set_title('Using hyphen instead of Unicode minus')
-plt.show()
-
-print(list(itertools.product([0,1], repeat=3)))
+c = pd.merge(a,b,on="Mat",how='left')
+print(a)
+print(b)
+print(c)

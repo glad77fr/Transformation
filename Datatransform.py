@@ -160,6 +160,7 @@ class Changedata:
                     self.source.at[i, "Tranche de décompte"] not in [99]:
                 self.source.at[i, champ_cible] = self.source.at[i, "Hres ouvrées/semaine"]/self.source.at[i, "Full Time Equivalent"]
 
+
 analyse = Changedata()
 
 analyse.chargement(r'D:\Users\sgasmi\Desktop\Données maquette\Effectif fin février.xlsx', 'Base')
