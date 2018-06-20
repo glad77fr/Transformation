@@ -17,7 +17,6 @@ class Changedata:
         if chemin[len(chemin) - 3:len(chemin)] == "csv":
             self.source = pd.read_csv(chemin,delimiter=delimiter,low_memory=False,header  = header_positions)
 
-
     def colonne(self):
         print(self.source.columns)
 
@@ -111,7 +110,6 @@ class Changedata:
         if isinstance(date_fin,str):
             date_fin = datetime.strptime(date_fin,'%d/%m/%Y')
 
-        #self.source[champ_cible] = self.source[champ_cible].values.astype(np.int64)
         self.source[champ_cible] = (date_fin - self.source[date_deb])
         self.source[champ_cible] = round(self.source[champ_cible].dt.days / 365.25, nb_decimal)
 
