@@ -4,10 +4,14 @@ import datetime as dt
 from datetime import datetime
 
 
-def comte_change(source,key,champ_change,beg_champ =None):
+def comte_change(source,key,champ_change,beg_champ,name_res=None):
     if isinstance(source ,pd.DataFrame) is False:
         raise TypeError
-    result = pd.DataFrame(columns=[key, "result",beg_champ])
+    if name_res is None:
+        name_res ='result'
+
+
+    result = pd.DataFrame(columns=[key,beg_champ,name_res])
     ref_key = ""
     ref_change = ""
     pos = 0
@@ -16,18 +20,21 @@ def comte_change(source,key,champ_change,beg_champ =None):
 
         if ref_key == val and ref_change != source.at[i, champ_change]:
             result.at[pos,key]= val
-            result.at[pos,"result"] = 1
+            result.at[pos,name_res] = 1
             result.at[pos,beg_champ] = source.at[i,beg_champ]
             ref_change = source.at[i, champ_change]
             pos += 1
 
         if ref_key == "":
             ref_key = val
+            ref_change = source.at[i, champ_change]
 
         if ref_key != val:
             ref_key = val
             ref_change = source.at[i, champ_change]
 
+        result[beg_champ] = pd.to_datetime(result[beg_champ])
+    #chang_fonct["Date déb."] = pd.to_datetime(chang_fonct["Date déb."])
     return result
 
 def convert_date_time(source, champ):
@@ -36,15 +43,16 @@ def convert_date_time(source, champ):
     source[champ] = source[champ].apply(lambda x: datetime.strptime(x, '%d/%m/%Y'))
     source[champ] = pd.to_datetime(source[champ], errors='coerce')
 
-#Dataframe stockants les résultats
+"Dataframes stockants les résultats"
 source = pd.DataFrame()
 res_int = pd.DataFrame()
 faits = pd.DataFrame()
 ent_group = pd.DataFrame()
 mobility_exit = pd.DataFrame(columns=["Mat."])
+chang_fonct = pd.DataFrame()
+
 "Chargement des données"
 source = pd.read_csv(r'D:\Users\sgasmi\Desktop\PA0001bis.csv', delimiter=";", low_memory=False)
-
 
 "Création de la clé unique"
 source["Clé"] = source["Date déb."].astype('str')
@@ -58,7 +66,6 @@ convert_date_time(source, "Fin valid.")
 date_fin = datetime.strptime("01/01/2030",'%d/%m/%Y')
 source['Fin valid.'] = source["Fin valid."].apply(lambda x: date_fin if str(x) == "NaT" else x)
 
-
 "Préparation des données"
 source = source.sort_values(["Mat.","CSté","Date déb."])
 mobility = comte_change(source,"Mat.","CSté","Date déb.")
@@ -68,16 +75,18 @@ mobility_exit["Mobility_exit"] = mobility["result"]
 ent_group = source.sort_values('Date déb.').groupby(['Mat.'], as_index=False).min()
 ent_group["Entrée_Groupe"] =1
 ent_group = ent_group[["Mat.", "Date déb.", "Entrée_Groupe"]]
-#present = sorties["Fin valid."] != "31.12.9999"
+chang_fonct = comte_change(source,"Mat.","Fonction","Date déb.","Chang_fonct")
 
-#res_aff = res_aff.sort_values('Date déb.').groupby(['Mat.'], as_index=False).max()
+
+
+print(chang_fonct.dtypes)
 "Alimentation de la table de faits"
 faits["Mat."] = mobility["Mat."]
 faits["Date déb."] = mobility["Date déb."]
 faits["Mobility Entry"] = mobility["result"]
-faits = faits.merge(mobility_exit,  how='outer')
-faits = faits.merge(ent_group, how='outer')
-
+faits = faits.merge(mobility_exit,on=["Mat.","Date déb."],  how='outer')
+faits = faits.merge(ent_group,on=["Mat.","Date déb."], how='outer')
+faits = faits.merge(chang_fonct, on=["Mat.","Date déb."], how='outer')
 
 #Intégration de la clé technique
 fusion = pd.merge(faits,source[['Mat.', 'Clé', 'Date déb.','Fin valid.']], on='Mat.', how='left')
@@ -87,10 +96,9 @@ fusion["Fin_dim"] = fusion["Fin valid."]
 fusion = fusion.query('Date_fait >= Début_dim and Date_fait <= Fin_dim')
 fusion["Date déb."] = fusion["Date_fait"]
 fusion = fusion[["Mat.", "Date déb.","Clé"]]
+fusion["Date déb."] = pd.to_datetime(fusion["Date déb."])
 faits = faits.merge(fusion, on=["Mat.","Date déb."], how="left")
 
-#source = pd.merge(source, mobility, on=["Mat."], how ='outer')
-#source = source.merge(mobility, left_on=["Mat.","Date déb."], right_on=["Mat.","Date déb."], how='outer')
 writer = pd.ExcelWriter(r'D:\Users\sgasmi\Desktop\mob.xlsx', engine='xlsxwriter')
 faits.to_excel(writer, sheet_name="res")
 writer.save()
