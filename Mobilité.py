@@ -111,7 +111,7 @@ faits = int_ext_key(faits,source,"Clé")
 faits = int_ext_key(faits, source_civil,"Clé_civil" )
 
 writer = pd.ExcelWriter(r'D:\Users\sgasmi\Desktop\mob.xlsx', engine='xlsxwriter')
-source_civil.to_excel(writer, sheet_name="res")
+faits.to_excel(writer, sheet_name="res")
 writer.save()
 
 print("ok")
